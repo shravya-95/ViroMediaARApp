@@ -19,10 +19,10 @@ var InitialARScene = require('./js/ARHitTestSample');
 
 // Array of 3d models that we use in this sample. This app switches between this these models.
 var objArray = [
-  require('./js/res/red_dot.png'),
+  require('./js/res/coffee_mug.png'),
   
-  require('./js/res/red_dot.png'),
-  require('./js/res/red_dot.png')];
+  require('./js/res/emoji_smile.png'),
+  require('./js/res/object_flowers.png')];
 
 export default class ViroSample extends Component {
   constructor() {

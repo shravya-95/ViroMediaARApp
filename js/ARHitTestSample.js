@@ -18,7 +18,7 @@ import {
   ViroQuad,
   ViroSpotLight,
   Viro3DObject,
-  ViroAnimations,
+  ViroAnimations
 } from 'react-viro';
 
 import TimerMixin from 'react-timer-mixin';
@@ -42,7 +42,9 @@ var ARHitTestSample = createReactClass({
     return (
       <ViroARScene ref="arscene" onTrackingInitialized={this._onTrackInit}>
           <ViroAmbientLight color="#ffffff" intensity={200}/>
-          {this._getModel()}
+            {this._getModel()}
+          
+          
       </ViroARScene>
     );
   },
@@ -59,43 +61,43 @@ var ARHitTestSample = createReactClass({
     }
 
      var bitMask = 4;
-      modelArray.push(<ViroNode
-        {...transformBehaviors}
-        visible={this.props.arSceneNavigator.viroAppProps.displayObject}
-        position={this.state.objPosition}
-        onDrag={()=>{}}
-        ref={this._setARNodeRef}
-        scale={this.state.scale}
-        rotation={this.state.rotation}
-        dragType="FixedToWorld" key={this.props.arSceneNavigator.viroAppProps.displayObjectName}>
+     modelArray.push(<ViroNode
+      {...transformBehaviors}
+      visible={this.props.arSceneNavigator.viroAppProps.displayObject}
+      position={this.state.objPosition}
+      onDrag={()=>{}}
+      ref={this._setARNodeRef}
+      scale={this.state.scale}
+      rotation={this.state.rotation}
+      dragType="FixedToWorld" key={this.props.arSceneNavigator.viroAppProps.displayObjectName}>
 
-        <ViroSpotLight
-          innerAngle={5}
-          outerAngle={20}
-          direction={[0,-1,0]}
-          position={[0, 4, 0]}
-          color="#ffffff"
-          castsShadow={true}
-          shadowNearZ={.1}
-          shadowFarZ={6}
-          shadowOpacity={.9}
-          ref={this._setSpotLightRef}/>
+      <ViroSpotLight
+        innerAngle={5}
+        outerAngle={20}
+        direction={[0,-1,0]}
+        position={[0, 4, 0]}
+        color="#ffffff"
+        castsShadow={true}
+        shadowNearZ={.1}
+        shadowFarZ={6}
+        shadowOpacity={.9}
+        ref={this._setSpotLightRef}/>
 
-        <ViroImage
-          position={[0, this.props.arSceneNavigator.viroAppProps.yOffset, 0]}
-          source={this.props.arSceneNavigator.viroAppProps.objectSource}
-          onLoadEnd={this._onLoadEnd} onLoadStart={this._onLoadStart}
-          onRotate={this._onRotate}
-          onPinch={this._onPinch} />
+      <Viro3DObject
+        position={[0, this.props.arSceneNavigator.viroAppProps.yOffset, 0]}
+        source={this.props.arSceneNavigator.viroAppProps.objectSource}
+        type = "VRX" onLoadEnd={this._onLoadEnd} onLoadStart={this._onLoadStart}
+        onRotate={this._onRotate}
+        onPinch={this._onPinch} />
 
-          <ViroQuad
-            rotation={[-90, 0, 0]}
-            position={[0, -.001, 0]}
-            width={2.5} height={2.5}
-            arShadowReceiver={true}
-            ignoreEventHandling={true} />
+        <ViroQuad
+          rotation={[-90, 0, 0]}
+          position={[0, -.001, 0]}
+          width={2.5} height={2.5}
+          arShadowReceiver={true}
+          ignoreEventHandling={true} />
 
-      </ViroNode>
+    </ViroNode>
     );
     return modelArray;
   },
