@@ -81,10 +81,10 @@ var ARHitTestSample = createReactClass({
           shadowOpacity={.9}
           ref={this._setSpotLightRef}/>
 
-        <Viro3DObject
+        <ViroImage
           position={[0, this.props.arSceneNavigator.viroAppProps.yOffset, 0]}
           source={this.props.arSceneNavigator.viroAppProps.objectSource}
-          type = "VRX" onLoadEnd={this._onLoadEnd} onLoadStart={this._onLoadStart}
+          onLoadEnd={this._onLoadEnd} onLoadStart={this._onLoadStart}
           onRotate={this._onRotate}
           onPinch={this._onPinch} />
 
