@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import GetLocation from 'react-native-get-location'
 import {
   AppRegistry,
   ActivityIndicator,
@@ -20,9 +21,7 @@ var InitialARScene = require('./js/ARHitTestSample');
 // Array of 3d models that we use in this sample. This app switches between this these models.
 var objArray = [
   require('./js/res/red_dot.png'),
-  
-  require('./js/res/red_dot.png'),
-  require('./js/res/red_dot.png')];
+  require('./js/res/green_dot.png')];
 
 export default class ViroSample extends Component {
   constructor() {
@@ -34,23 +33,28 @@ export default class ViroSample extends Component {
     this._onDisplayDialog = this._onDisplayDialog.bind(this);
     this._onLoadStart = this._onLoadStart.bind(this);
     this._onLoadEnd = this._onLoadEnd.bind(this);
+    // this._showDeviceLocation = this._showDeviceLocation.bind(this);
+    // this.locationInit = this._locationInit.bind(this);
+
+    
 
     this.state = {
       viroAppProps: {displayObject:false, objectSource:objArray[0], yOffset:0, _onLoadEnd: this._onLoadEnd, _onLoadStart: this._onLoadStart, _onTrackingInit:this._onTrackingInit},
       trackingInitialized: false,
       isLoading: false,
+      loading:true
     }
   }
 
   render() {
     return (
       <View style={localStyles.outer} >
-        <ViroARSceneNavigator style={localStyles.arView} apiKey="YOUR API KEY"
+        <ViroARSceneNavigator style={localStyles.arView}
           initialScene={{scene:InitialARScene, passProps:{displayObject:this.state.displayObject}}}  viroAppProps={this.state.viroAppProps}
         />
 
         {this._renderTrackingText()}
-
+        {/* {this._showDeviceLocation()} */}
         {renderIf(this.state.isLoading,
           <View style={{position:'absolute', left:0, right:0, top:0, bottom:0, alignItems: 'center', justifyContent:'center'}}>
             <ActivityIndicator size='large' animating={this.state.isLoading} color='#ffffff'/>
@@ -61,7 +65,7 @@ export default class ViroSample extends Component {
           <TouchableHighlight style={localStyles.buttons}
             onPress={this._onDisplayDialog}
             underlayColor={'#00000000'} >
-            <Image source={require("./js/res/btn_mode_objects.png")} />
+            <Image source={require("./js/res/avatar.png")} />
           </TouchableHighlight>
         </View>
       </View>
@@ -84,6 +88,7 @@ export default class ViroSample extends Component {
 
   _renderTrackingText() {
     if(this.state.trackingInitialized) {
+      
       return (<View style={{position: 'absolute', backgroundColor:"#ffffff22", left: 30, right: 30, top: 30, alignItems: 'center'}}>
         <Text style={{fontSize:12, color:"#ffffff"}}>Tracking initialized.</Text>
       </View>);
@@ -93,7 +98,39 @@ export default class ViroSample extends Component {
         </View>);
     }
   }
+  // _showDeviceLocation() {
+  //   console.log("location text outside", this.state.loading);
 
+  //     if (this.state.loading){
+  //       console.log("location text inside");
+
+  //     GetLocation.getCurrentPosition({
+  //         enableHighAccuracy: true,
+  //         timeout: 150000,
+  //     })
+  //         .then(location => {
+  //             this.setState({
+  //                 location,
+  //                 loading:false,
+  //             });
+  //             // return (<View style={{position: 'absolute', backgroundColor:"#ffffff22", left: 30, right: 30, top:30, alignItems: 'center'}}>
+  //             // <Text style={{fontSize:12, color:"#ffffff"}}>{location}</Text>
+  //             // </View>);
+  //             console.log(location);
+  //         })
+  //         .catch(error => {
+  //         const { code, message } = error;
+  //         console.warn(code, message);
+  //         return;
+  //     })
+  //   }
+  // }
+  _locationInit(){
+    this.setState({
+      loading:true,
+      location: null,
+    });
+  }
   _onTrackingInit() {
     this.setState({
       trackingInitialized: true,
@@ -105,9 +142,9 @@ export default class ViroSample extends Component {
     'Choose an object',
     'Select an object to place in the world!',
     [
-      {text: 'Coffee Mug', onPress: () => this._onShowObject(0, "coffee_mug", 0)},
-      {text: 'Flowers', onPress: () => this._onShowObject(1, "flowers", .290760)},
-      {text: 'Smile Emoji', onPress: () => this._onShowObject(2, "smile_emoji", .497823)},
+      {text: 'Red Dot', onPress: () => this._onShowObject(0, "red_dot", 0)},
+      {text: 'Green Dot', onPress: () => this._onShowObject(1, "green_dot", .290760)},
+      {text: 'Yellow Dot', onPress: () => this._onShowObject(0, "smile_emoji", .497823)},
     ],
     );
   }

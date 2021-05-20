@@ -7,7 +7,10 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 import React, { Component } from 'react';
-
+import GetLocation from 'react-native-get-location'
+import {
+  Alert,
+} from 'react-native';
 import {
   ViroARScene,
   ViroAmbientLight,
@@ -19,6 +22,7 @@ import {
   ViroSpotLight,
   Viro3DObject,
   ViroAnimations,
+  ViroImage
 } from 'react-viro';
 
 import TimerMixin from 'react-timer-mixin';
@@ -43,8 +47,32 @@ var ARHitTestSample = createReactClass({
       <ViroARScene ref="arscene" onTrackingInitialized={this._onTrackInit}>
           <ViroAmbientLight color="#ffffff" intensity={200}/>
           {this._getModel()}
+          {/* {this._showDeviceLocation()} */}
       </ViroARScene>
     );
+  },
+
+  _showDeviceLocation(){
+    _requestLocation = () => {
+      this.setState({ loading: true, location: null });
+
+      GetLocation.getCurrentPosition({
+          enableHighAccuracy: true,
+          timeout: 150000,
+      })
+          .then(location => {
+              this.setState({
+                  location,
+                  loading: false,
+              });
+              return (<View style={{position: 'absolute', backgroundColor:"#ffffff22", left: 30, right: 30, top:40, alignItems: 'center'}}>
+              <Text style={{fontSize:12, color:"#ffffff"}}>{location}</Text>
+              </View>);
+          })
+          .catch(error => {
+          const { code, message } = error;
+          console.warn(code, message);
+      })}
   },
 
   _getModel() {
@@ -59,43 +87,22 @@ var ARHitTestSample = createReactClass({
     }
 
      var bitMask = 4;
-      modelArray.push(<ViroNode
-        {...transformBehaviors}
-        visible={this.props.arSceneNavigator.viroAppProps.displayObject}
-        position={this.state.objPosition}
-        onDrag={()=>{}}
-        ref={this._setARNodeRef}
-        scale={this.state.scale}
-        rotation={this.state.rotation}
-        dragType="FixedToWorld" key={this.props.arSceneNavigator.viroAppProps.displayObjectName}>
-
-        <ViroSpotLight
-          innerAngle={5}
-          outerAngle={20}
-          direction={[0,-1,0]}
-          position={[0, 4, 0]}
-          color="#ffffff"
-          castsShadow={true}
-          shadowNearZ={.1}
-          shadowFarZ={6}
-          shadowOpacity={.9}
-          ref={this._setSpotLightRef}/>
+      modelArray.push(
 
         <ViroImage
+          visible={this.props.arSceneNavigator.viroAppProps.displayObject}
+          onDrag={this._onDrag}
+          ref={this._setARNodeRef.bind(this)}
+          scale={this.state.scale}
+          rotation={this.state.rotation}
+          dragType="FixedToWorld"
+          key={this.props.arSceneNavigator.viroAppProps.displayObjectName}
           position={[0, this.props.arSceneNavigator.viroAppProps.yOffset, 0]}
           source={this.props.arSceneNavigator.viroAppProps.objectSource}
           onLoadEnd={this._onLoadEnd} onLoadStart={this._onLoadStart}
           onRotate={this._onRotate}
           onPinch={this._onPinch} />
 
-          <ViroQuad
-            rotation={[-90, 0, 0]}
-            position={[0, -.001, 0]}
-            width={2.5} height={2.5}
-            arShadowReceiver={true}
-            ignoreEventHandling={true} />
-
-      </ViroNode>
     );
     return modelArray;
   },
@@ -127,7 +134,16 @@ var ARHitTestSample = createReactClass({
 
     this.arNodeRef.setNativeProps({rotation:[this.state.rotation[0], this.state.rotation[1] + rotationFactor, this.state.rotation[2]]});
   },
+  _onDrag(position,source){
+    //store the object location when draged and dropped
+    // Alert.alert(
+    //   'The coordinates of the object are: \n x: '+position[0]+'\n y: '+ position[1]+'\n z: '+position[2]
 
+    // );
+
+    this.arNodeRef.setNativeProps({position:[position[0], position[1],position[1]]});
+
+  },
   /*
    Pinch scaling should be relative to its last value *not* the absolute value of the
    scale factor. So while the pinching is ongoing set scale through setNativeProps
@@ -145,7 +161,7 @@ var ARHitTestSample = createReactClass({
     }
 
     this.arNodeRef.setNativeProps({scale:newScale});
-    this.spotLight.setNativeProps({shadowFarZ: 6 * newScale[0]});
+    // this.spotLight.setNativeProps({shadowFarZ: 6 * newScale[0]});
   },
 
   _onLoadStart() {
